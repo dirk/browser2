@@ -185,12 +185,12 @@ class Browser
 
   # Detect if browser is Chrome.
   def chrome?
-    ua =~ /Chrome|CriOS/ && !opera? && !edge?
+    (in_ua?('Chrome'.freeze) || in_ua?('CriOS'.freeze)) && !opera? && !edge?
   end
 
   # Detect if browser is Opera.
   def opera?
-    !!(ua =~ /(Opera|OPR)/)
+    in_ua?('Opera') || in_ua?('OPR')
   end
 
   # Detect if browser is Silk.
@@ -227,6 +227,11 @@ class Browser
   def detect_version?(actual_version, expected_version)
     return true unless expected_version
     actual_version.to_s.start_with?(expected_version.to_s)
+  end
+
+  # Private shorthand for checking if a given string is in the user agent.
+  def in_ua? string
+    ua.include? string
   end
 
   def deprecate(message)
