@@ -20,7 +20,8 @@ class Browser
     def bot_name
       return 'Generic Bot'.freeze if bot_with_empty_ua?
 
-      BOTS.find {|key, _| ua.include?(key) }.first
+      pair = BOTS.find {|key, _| ua.include?(key) }
+      return pair ? pair.first : nil
     end
 
     def search_engine?
