@@ -1,5 +1,6 @@
 require 'test_helper'
 
+require 'benchmark'
 require 'minitest/benchmark'
 
 class BenchmarkTest < Minitest::Benchmark
@@ -40,18 +41,44 @@ class BenchmarkTest < Minitest::Benchmark
 
   private
 
-  def assert_browser_performance ua, &block
-    assert_performance(validation_noop) do |n|
-      n.times do
-        browser = Browser.new ua: ua
+  WARMUP        = 1_000
+  ITERATIONS    = 10_000
+  GC_ITERATIONS = 1_00
 
-        block.call browser
-      end
+  def assert_browser_performance ua, &test_block
+    block = proc do
+      browser = Browser.new ua: ua
+
+      test_block.call browser
     end
+
+    WARMUP.times &block
+
+    time = Benchmark.realtime do
+      ITERATIONS.times &block
+    end
+
+    objects = benchmark_memory &block
+
+    print "#{name}\t%10.5f seconds\t%d objects\n" % [time, objects]
   end
 
   def validation_noop
     proc { }
+  end
+
+  def benchmark_memory &block
+    GC.start
+
+    before_allocated = GC.stat[:total_allocated_objects]
+    GC.disable
+
+    GC_ITERATIONS.times &block
+
+    after_allocated = GC.stat[:total_allocated_objects]
+    GC.enable
+
+    return after_allocated - before_allocated
   end
 
 end
