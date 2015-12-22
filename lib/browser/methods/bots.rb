@@ -18,8 +18,8 @@ class Browser
     end
 
     def bot_name
-      return unless bot?
-      return "Generic Bot" if bot_with_empty_ua?
+      return 'Generic Bot'.freeze if bot_with_empty_ua?
+
       BOTS.find {|key, _| ua.include?(key) }.first
     end
 
@@ -30,7 +30,7 @@ class Browser
     private
 
     def bot_with_empty_ua?
-      Browser::Bots.detect_empty_ua? && ua.strip == ""
+      Browser::Bots.detect_empty_ua? && ua.strip == ''.freeze
     end
   end
 end
