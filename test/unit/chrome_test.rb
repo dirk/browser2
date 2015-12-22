@@ -1,12 +1,8 @@
 require "test_helper"
 
 class ChromeTest < Minitest::Test
-  setup do
-    @browser = Browser.new
-  end
-
   test "detects chrome" do
-    @browser.ua = $ua["CHROME"]
+    @browser = Browser.new ua: $ua["CHROME"]
 
     assert_equal "Chrome", @browser.name
     assert @browser.chrome?
@@ -18,7 +14,7 @@ class ChromeTest < Minitest::Test
   end
 
   test "detects mobile chrome" do
-    @browser.ua = $ua["MOBILE_CHROME"]
+    @browser = Browser.new ua: $ua["MOBILE_CHROME"]
 
     assert_equal "Chrome", @browser.name
     assert @browser.chrome?
@@ -30,7 +26,7 @@ class ChromeTest < Minitest::Test
   end
 
   test "detects samsung chrome" do
-    @browser.ua = $ua["SAMSUNG_CHROME"]
+    @browser = Browser.new ua: $ua["SAMSUNG_CHROME"]
 
     assert_equal "Chrome", @browser.name
     assert @browser.chrome?
@@ -43,12 +39,12 @@ class ChromeTest < Minitest::Test
   end
 
   test "detects chrome os" do
-    @browser.ua = $ua["CHROME_OS"]
+    @browser = Browser.new ua: $ua["CHROME_OS"]
     assert @browser.chrome_os?
   end
 
   test "detects yandex browser" do
-    @browser.ua = $ua["YANDEX_BROWSER"]
+    @browser = Browser.new ua: $ua["YANDEX_BROWSER"]
 
     assert @browser.yandex?
     assert @browser.chrome?

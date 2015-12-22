@@ -1,12 +1,8 @@
 require "test_helper"
 
 class FirefoxTest < Minitest::Test
-  setup do
-    @browser = Browser.new
-  end
-
   test "detects firefox" do
-    @browser.ua = $ua["FIREFOX"]
+    @browser = Browser.new ua: $ua["FIREFOX"]
 
     assert_equal "Firefox", @browser.name
     assert @browser.firefox?
@@ -16,7 +12,7 @@ class FirefoxTest < Minitest::Test
   end
 
   test "detects modern firefox" do
-    @browser.ua = $ua["FIREFOX_MODERN"]
+    @browser = Browser.new ua: $ua["FIREFOX_MODERN"]
 
     assert_equal :firefox, @browser.id
     assert_equal "Firefox", @browser.name
@@ -27,7 +23,7 @@ class FirefoxTest < Minitest::Test
   end
 
   test "detects firefox android tablet" do
-    @browser.ua = $ua["FIREFOX_TABLET"]
+    @browser = Browser.new ua: $ua["FIREFOX_TABLET"]
 
     assert_equal :firefox, @browser.id
     assert_equal "Firefox", @browser.name

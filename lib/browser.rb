@@ -39,9 +39,8 @@ class Browser
   include Tv
 
   # Set browser's UA string.
-  attr_accessor :user_agent
+  attr_reader :user_agent
   alias_method :ua, :user_agent
-  alias_method :ua=, :user_agent=
 
   NAMES = {
     edge: "Microsoft Edge",   # Must come before everything
@@ -107,11 +106,16 @@ class Browser
   #     :accept_language => "pt-br"
   #   })
   #
-  def initialize(options = {}, &block)
-    self.user_agent = (options[:user_agent] || options[:ua]).to_s
+  def initialize(options = {})
+    user_agent = options[:user_agent] || options[:ua]
+    unless user_agent
+      raise ArgumentError, 'Must receive a :user_agent or :ua option'
+    end
+
+    @user_agent = user_agent.to_s
     self.accept_language = options[:accept_language].to_s
 
-    yield self if block
+    yield self if block_given?
   end
 
   # Get readable browser name.
