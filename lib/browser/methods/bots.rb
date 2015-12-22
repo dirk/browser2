@@ -1,8 +1,9 @@
 class Browser
   module Bots
     root = Pathname.new(File.expand_path("../../../..", __FILE__))
-    BOTS = YAML.load_file(root.join("bots.yml"))
-    SEARCH_ENGINES = YAML.load_file(root.join("search_engines.yml"))
+
+    BOTS           = YAML.load_file root.join('data/bots.yml')
+    SEARCH_ENGINES = YAML.load_file root.join('data/search_engines.yml')
 
     def self.detect_empty_ua!
       @detect_empty_ua = true
