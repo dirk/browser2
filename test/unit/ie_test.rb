@@ -1,12 +1,8 @@
 require "test_helper"
 
 class IeTest < Minitest::Test
-  setup do
-    @browser = Browser.new
-  end
-
   test "detects ie6" do
-    @browser.ua = $ua["IE6"]
+    @browser = Browser.new ua: $ua["IE6"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -17,7 +13,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie7" do
-    @browser.ua = $ua["IE7"]
+    @browser = Browser.new ua: $ua["IE7"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -28,7 +24,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie8" do
-    @browser.ua = $ua["IE8"]
+    @browser = Browser.new ua: $ua["IE8"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -40,7 +36,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie8 in compatibility view" do
-    @browser.ua = $ua["IE8_COMPAT"]
+    @browser = Browser.new ua: $ua["IE8_COMPAT"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -54,7 +50,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie9" do
-    @browser.ua = $ua["IE9"]
+    @browser = Browser.new ua: $ua["IE9"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -66,7 +62,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie9 in compatibility view" do
-    @browser.ua = $ua["IE9_COMPAT"]
+    @browser = Browser.new ua: $ua["IE9_COMPAT"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -80,7 +76,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie10" do
-    @browser.ua = $ua["IE10"]
+    @browser = Browser.new ua: $ua["IE10"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -92,7 +88,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie10 in compatibility view" do
-    @browser.ua = $ua["IE10_COMPAT"]
+    @browser = Browser.new ua: $ua["IE10_COMPAT"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -106,7 +102,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie11" do
-    @browser.ua = $ua["IE11"]
+    @browser = Browser.new ua: $ua["IE11"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -118,7 +114,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie11 in compatibility view" do
-    @browser.ua = $ua["IE11_COMPAT"]
+    @browser = Browser.new ua: $ua["IE11_COMPAT"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -132,7 +128,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects Lumia 800" do
-    @browser.ua = $ua["LUMIA800"]
+    @browser = Browser.new ua: $ua["LUMIA800"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -144,7 +140,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects ie11 touch desktop pc" do
-    @browser.ua = $ua["IE11_TOUCH_SCREEN"]
+    @browser = Browser.new ua: $ua["IE11_TOUCH_SCREEN"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.ie?
@@ -159,7 +155,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects Microsoft Edge" do
-    @browser.ua = $ua["MS_EDGE"]
+    @browser = Browser.new ua: $ua["MS_EDGE"]
 
     assert_equal :edge, @browser.id
     assert_equal "Microsoft Edge", @browser.name
@@ -175,7 +171,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects Microsoft Edge in compatibility view" do
-    @browser.ua = $ua["MS_EDGE_COMPAT"]
+    @browser = Browser.new ua: $ua["MS_EDGE_COMPAT"]
 
     assert_equal :edge, @browser.id
     assert_equal "Microsoft Edge", @browser.name
@@ -193,7 +189,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects Microsoft Edge Mobile" do
-    @browser.ua = $ua["MS_EDGE_MOBILE"]
+    @browser = Browser.new ua: $ua["MS_EDGE_MOBILE"]
 
     assert_equal :edge, @browser.id
     assert_equal "Microsoft Edge", @browser.name
@@ -210,7 +206,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects IE without Trident" do
-    @browser.ua = $ua["IE_WITHOUT_TRIDENT"]
+    @browser = Browser.new ua: $ua["IE_WITHOUT_TRIDENT"]
 
     assert_equal :ie, @browser.id
     assert_equal "Internet Explorer", @browser.name
@@ -229,7 +225,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects windows phone" do
-    @browser.ua = $ua["WINDOWS_PHONE"]
+    @browser = Browser.new ua: $ua["WINDOWS_PHONE"]
 
     assert @browser.ie?
     assert_equal "7", @browser.version
@@ -240,7 +236,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects windows phone 8" do
-    @browser.ua = $ua["WINDOWS_PHONE8"]
+    @browser = Browser.new ua: $ua["WINDOWS_PHONE8"]
 
     assert @browser.ie?
     assert_equal "10", @browser.version
@@ -251,7 +247,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects windows phone 8.1" do
-    @browser.ua = $ua["WINDOWS_PHONE_81"]
+    @browser = Browser.new ua: $ua["WINDOWS_PHONE_81"]
 
     assert @browser.ie?
     assert_equal "Internet Explorer", @browser.name
@@ -265,7 +261,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects windows mobile (windows phone 8)" do
-    @browser.ua = $ua["WINDOWS_PHONE8"]
+    @browser = Browser.new ua: $ua["WINDOWS_PHONE8"]
 
     assert @browser.ie?
     assert_equal "10", @browser.version
@@ -276,48 +272,48 @@ class IeTest < Minitest::Test
   end
 
   test "detects windows x64" do
-    @browser.ua = $ua["IE10_X64_WINX64"]
+    @browser = Browser.new ua: $ua["IE10_X64_WINX64"]
     assert @browser.windows_x64?
     refute @browser.windows_wow64?
     assert @browser.windows_x64_inclusive?
   end
 
   test "detects windows wow64" do
-    @browser.ua = $ua["WINDOWS_WOW64"]
+    @browser = Browser.new ua: $ua["WINDOWS_WOW64"]
     refute @browser.windows_x64?
     assert @browser.windows_wow64?
     assert @browser.windows_x64_inclusive?
   end
 
   test "detects windows platform" do
-    @browser.ua = "Windows"
+    @browser = Browser.new ua: "Windows"
     assert_equal :windows, @browser.platform
     assert @browser.windows?
   end
 
   test "detects windows_xp" do
-    @browser.ua = $ua["WINDOWS_XP"]
+    @browser = Browser.new ua: $ua["WINDOWS_XP"]
 
     assert @browser.windows?
     assert @browser.windows_xp?
   end
 
   test "detects windows_vista" do
-    @browser.ua = $ua["WINDOWS_VISTA"]
+    @browser = Browser.new ua: $ua["WINDOWS_VISTA"]
 
     assert @browser.windows?
     assert @browser.windows_vista?
   end
 
   test "detects windows7" do
-    @browser.ua = $ua["WINDOWS7"]
+    @browser = Browser.new ua: $ua["WINDOWS7"]
 
     assert @browser.windows?
     assert @browser.windows7?
   end
 
   test "detects windows8" do
-    @browser.ua = $ua["WINDOWS8"]
+    @browser = Browser.new ua: $ua["WINDOWS8"]
 
     assert @browser.windows?
     assert @browser.windows8?
@@ -325,7 +321,7 @@ class IeTest < Minitest::Test
   end
 
   test "detects windows8.1" do
-    @browser.ua = $ua["WINDOWS81"]
+    @browser = Browser.new ua: $ua["WINDOWS81"]
 
     assert @browser.windows?
     assert @browser.windows8?
@@ -333,7 +329,7 @@ class IeTest < Minitest::Test
   end
 
   test "returns string representation for ie6" do
-    @browser.ua = $ua["IE6"]
+    @browser = Browser.new ua: $ua["IE6"]
     meta = @browser.meta
 
     assert meta.include?("ie")
@@ -345,7 +341,7 @@ class IeTest < Minitest::Test
   end
 
   test "returns string representation for ie7" do
-    @browser.ua = $ua["IE7"]
+    @browser = Browser.new ua: $ua["IE7"]
     meta = @browser.meta
 
     assert meta.include?("ie")
@@ -357,7 +353,7 @@ class IeTest < Minitest::Test
   end
 
   test "returns string representation for ie8" do
-    @browser.ua = $ua["IE8"]
+    @browser = Browser.new ua: $ua["IE8"]
     meta = @browser.meta
 
     assert meta.include?("ie")
@@ -367,12 +363,14 @@ class IeTest < Minitest::Test
   end
 
   test "warn about deprecated numbered version" do
+    @browser = Browser.new ua: $ua["IE6"]
+
     message = "Browser#ie6? is deprecated; use Browser#ie?(version) instead"
     assert_deprecated(message, __FILE__, __LINE__) { @browser.ie6? }
   end
 
   test "don't detect as two different versions" do
-    @browser.ua = $ua["IE8"]
+    @browser = Browser.new ua: $ua["IE8"]
     assert @browser.ie?(8)
     refute @browser.ie?(7)
   end

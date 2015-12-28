@@ -1,31 +1,27 @@
 require "test_helper"
 
 class BrowserTest < Minitest::Test
-  setup do
-    @browser = Browser.new
-  end
-
   test "yields self when block is given" do
     browser = nil
-    Browser.new {|b| browser = b }
+    Browser.new(ua: 'Chrome') {|b| browser = b }
     assert_kind_of Browser, browser
   end
 
   test "responds to ua methods" do
+    @browser = Browser.new ua: 'Chrome'
     assert @browser.respond_to?(:ua)
-    assert @browser.respond_to?(:ua=)
   end
 
   test "delegates ua methods" do
-    @browser.user_agent = "Safari"
-    assert_equal "Safari", @browser.ua
+    @browser = Browser.new ua: 'Safari'
+    assert_equal 'Safari', @browser.ua
 
-    @browser.ua = "Mozilla"
-    assert_equal "Mozilla", @browser.user_agent
+    @browser = Browser.new ua: 'Mozilla'
+    assert_equal 'Mozilla', @browser.user_agent
   end
 
   test "sets accept language while instantiating object" do
-    @browser = Browser.new(:accept_language => "pt-br")
+    @browser = Browser.new ua: 'Chrome', accept_language: "pt-br"
     assert_equal ["pt-br"], @browser.accept_language
   end
 
@@ -38,7 +34,7 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects android" do
-    @browser.ua = $ua["ANDROID"]
+    @browser = Browser.new ua: $ua["ANDROID"]
 
     assert_equal "Android", @browser.name
     assert @browser.android?
@@ -52,7 +48,7 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects android tablet" do
-    @browser.ua = $ua["TABLOID"]
+    @browser = Browser.new ua: $ua["TABLOID"]
 
     assert_equal "Android", @browser.name
     assert @browser.android?
@@ -66,7 +62,7 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects surface tablet" do
-    @browser.ua = $ua["SURFACE"]
+    @browser = Browser.new ua: $ua["SURFACE"]
 
     assert_equal "Internet Explorer", @browser.name
     assert @browser.surface?
@@ -79,7 +75,7 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects quicktime" do
-    @browser.ua = $ua["QUICKTIME"]
+    @browser = Browser.new ua: $ua["QUICKTIME"]
 
     assert_equal "QuickTime", @browser.name
     assert @browser.quicktime?
@@ -88,7 +84,7 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects core media" do
-    @browser.ua = $ua["COREMEDIA"]
+    @browser = Browser.new ua: $ua["COREMEDIA"]
 
     assert_equal "Apple CoreMedia", @browser.name
     assert @browser.core_media?
@@ -97,7 +93,7 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects phantom.js" do
-    @browser.ua = $ua["PHANTOM_JS"]
+    @browser = Browser.new ua: $ua["PHANTOM_JS"]
 
     assert_equal "PhantomJS", @browser.name
     assert @browser.phantom_js?
@@ -109,17 +105,17 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects other mobiles" do
-    @browser.ua = "Symbian OS"
+    @browser = Browser.new ua: "Symbian OS"
     assert @browser.mobile?
     refute @browser.tablet?
 
-    @browser.ua = "MIDP-2.0"
+    @browser = Browser.new ua: "MIDP-2.0"
     assert @browser.mobile?
     refute @browser.tablet?
   end
 
   test "detects windows mobile" do
-    @browser.ua = $ua["WINDOWS_MOBILE"]
+    @browser = Browser.new ua: $ua["WINDOWS_MOBILE"]
 
     assert @browser.mobile?
     assert @browser.windows?
@@ -129,18 +125,18 @@ class BrowserTest < Minitest::Test
   end
 
   test "returns a zero version" do
-    @browser.ua = "Bot"
+    @browser = Browser.new ua: "Bot"
     assert_equal "0.0", @browser.full_version
     assert_equal "0", @browser.version
   end
 
   test "sets meta" do
-    @browser.ua = $ua["CHROME"]
+    @browser = Browser.new ua: $ua["CHROME"]
     assert_kind_of Array, @browser.meta
   end
 
   test "returns string representation" do
-    @browser.ua = $ua["CHROME"]
+    @browser = Browser.new ua: $ua["CHROME"]
     meta = @browser.to_s
 
     assert meta.include?("chrome")
@@ -150,7 +146,7 @@ class BrowserTest < Minitest::Test
   end
 
   test "returns string representation for mobile" do
-    @browser.ua = $ua["BLACKBERRY"]
+    @browser = Browser.new ua: $ua["BLACKBERRY"]
     meta = @browser.to_s
 
     assert meta.include?("blackberry")
@@ -160,39 +156,43 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects unknown id" do
-    @browser.ua = "Unknown"
+    @browser = Browser.new ua: "Unknown"
     assert_equal :other, @browser.id
   end
 
   test "detects unknown name" do
-    @browser.ua = "Unknown"
+    @browser = Browser.new ua: "Unknown"
     assert_equal "Other", @browser.name
   end
 
   test "detects mac platform" do
-    @browser.ua = "Mac OS X"
+    @browser = Browser.new ua: "Mac OS X"
     assert_equal :mac, @browser.platform
     assert @browser.mac?
   end
 
   test "detects linux platform" do
-    @browser.ua = "Linux"
+    @browser = Browser.new ua: "Linux"
     assert_equal :linux, @browser.platform
     assert @browser.linux?
   end
 
   test "detects unknown platform" do
-    @browser.ua = "Unknown"
+    @browser = Browser.new ua: "Unknown"
     assert_equal :other, @browser.platform
   end
 
   test "returns all known languages" do
-    @browser.accept_language = "en-us,en;q=0.8,pt-br;q=0.5,pt;q=0.3"
+    @browser = Browser.new(
+      ua:              "Unknown",
+      accept_language: "en-us,en;q=0.8,pt-br;q=0.5,pt;q=0.3"
+    )
+
     assert_equal ["en-us", "en", "pt-br", "pt"], @browser.accept_language
   end
 
   test "detects xoom" do
-    @browser.ua = $ua["XOOM"]
+    @browser = Browser.new ua: $ua["XOOM"]
 
     assert @browser.android?
     assert @browser.tablet?
@@ -200,7 +200,7 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects nexus tablet" do
-    @browser.ua = $ua["NEXUS_TABLET"]
+    @browser = Browser.new ua: $ua["NEXUS_TABLET"]
 
     assert @browser.android?
     assert @browser.tablet?
@@ -208,41 +208,41 @@ class BrowserTest < Minitest::Test
   end
 
   test "detects nook" do
-    @browser.ua = $ua["NOOK"]
+    @browser = Browser.new ua: $ua["NOOK"]
 
     assert @browser.tablet?
     refute @browser.mobile?
   end
 
   test "detects samsung" do
-    @browser.ua = $ua["SAMSUNG"]
+    @browser = Browser.new ua: $ua["SAMSUNG"]
 
     assert @browser.tablet?
     refute @browser.mobile?
   end
 
   test "removes duplicate items" do
-    @browser.ua = $ua["SAFARI"]
+    @browser = Browser.new ua: $ua["SAFARI"]
     assert_equal ["safari"], @browser.meta.select {|item| item == "safari" }
   end
 
   test "detects meta aliased as to_a" do
-    @browser.ua = $ua["SAFARI"]
+    @browser = Browser.new ua: $ua["SAFARI"]
     assert_equal @browser.meta, @browser.to_a
   end
 
   test "detects tv" do
-    @browser.ua = $ua["SMART_TV"]
+    @browser = Browser.new ua: $ua["SMART_TV"]
     assert @browser.tv?
   end
 
   test "knows a supported browser" do
-    @browser.ua = "Chrome"
+    @browser = Browser.new ua: "Chrome"
     assert @browser.known?
   end
 
   test "does not know an unsupported browser" do
-    @browser.ua = "Fancy new browser"
+    @browser = Browser.new ua: "Fancy new browser"
     refute @browser.known?
   end
 end

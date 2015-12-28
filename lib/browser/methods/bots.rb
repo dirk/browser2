@@ -1,9 +1,9 @@
+# frozen_string_literal: true
+
 class Browser
   module Bots
-    root = Pathname.new(File.expand_path("../../../..", __FILE__))
-
-    BOTS           = YAML.load_file root.join('data/bots.yml')
-    SEARCH_ENGINES = YAML.load_file root.join('data/search_engines.yml')
+    BOTS           = Browser::Data::BOTS
+    SEARCH_ENGINES = Browser::Data::SEARCH_ENGINES
 
     def self.detect_empty_ua!
       @detect_empty_ua = true
@@ -18,7 +18,7 @@ class Browser
     end
 
     def bot_name
-      return 'Generic Bot'.freeze if bot_with_empty_ua?
+      return 'Generic Bot' if bot_with_empty_ua?
 
       pair = BOTS.find {|key, _| ua.include?(key) }
       return pair ? pair.first : nil
@@ -31,7 +31,7 @@ class Browser
     private
 
     def bot_with_empty_ua?
-      Browser::Bots.detect_empty_ua? && ua.strip == ''.freeze
+      Browser::Bots.detect_empty_ua? && ua.strip == ''
     end
   end
 end

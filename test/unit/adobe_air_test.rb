@@ -1,12 +1,8 @@
 require "test_helper"
 
 class AdobeAirTest < Minitest::Test
-  setup do
-    @browser = Browser.new
-  end
-
   test "detects adobe air" do
-    @browser.ua = $ua["ADOBE_AIR"]
+    @browser = Browser.new ua: $ua["ADOBE_AIR"]
 
     assert @browser.adobe_air?
     assert @browser.webkit?

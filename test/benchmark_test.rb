@@ -8,7 +8,6 @@ class BenchmarkTest < Minitest::Benchmark
     [100, 10_000]
   end
 
-
   def bench_chrome
     assert_browser_performance($ua['CHROME']) do |browser|
       assert_equal "Chrome", browser.name

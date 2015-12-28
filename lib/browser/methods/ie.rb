@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Browser
   module IE
     TRIDENT_VERSION_REGEX = %r[Trident/([0-9.]+)]
@@ -78,7 +80,10 @@ class Browser
 
     # Detect if browser is Microsoft Edge.
     def edge?
-      !!(ua =~ EDGE)
+      in_ua?('Edge/') || in_ua?('Trident/8')
+
+      # Old regex approach:
+      #  !!(ua =~ EDGE)
     end
 
     # Detect if IE is running in compatibility mode.

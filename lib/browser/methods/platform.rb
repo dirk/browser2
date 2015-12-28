@@ -120,12 +120,12 @@ class Browser
 
     # Detect if current platform is Linux flavor.
     def linux?
-      !!(ua =~ /Linux/)
+      in_ua? 'Linux'
     end
 
     # Detect if current platform is ChromeOS
     def chrome_os?
-      !!(ua =~ /CrOS/)
+      in_ua? 'CrOS'
     end
 
     # Return the platform.

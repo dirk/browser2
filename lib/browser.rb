@@ -1,6 +1,13 @@
+# frozen_string_literal: true
+
+require "multi_json"
+require "pathname"
 require "set"
 require "yaml"
-require "pathname"
+
+require "browser/data/bots"
+require "browser/data/languages"
+require "browser/data/search_engines"
 
 require "browser/middleware"
 require "browser/middleware/context"
@@ -38,10 +45,9 @@ class Browser
   include Bots
   include Tv
 
-  # Set browser's UA string.
-  attr_accessor :user_agent
+  # Get the browser's UA string; this is immutable after initialization.
+  attr_reader :user_agent
   alias_method :ua, :user_agent
-  alias_method :ua=, :user_agent=
 
   NAMES = {
     edge: "Microsoft Edge",   # Must come before everything
@@ -107,11 +113,16 @@ class Browser
   #     :accept_language => "pt-br"
   #   })
   #
-  def initialize(options = {}, &block)
-    self.user_agent = (options[:user_agent] || options[:ua]).to_s
+  def initialize(options = {})
+    user_agent = options[:user_agent] || options[:ua]
+    unless user_agent
+      raise ArgumentError, 'Must receive a :user_agent or :ua option'
+    end
+
+    @user_agent = user_agent.to_s
     self.accept_language = options[:accept_language].to_s
 
-    yield self if block
+    yield self if block_given?
   end
 
   # Get readable browser name.
@@ -121,8 +132,9 @@ class Browser
 
   # Get the browser identifier.
   def id
-    NAMES.keys
-      .find {|id| respond_to?("#{id}?", true) ? send("#{id}?") : id }
+    @id ||=
+      NAMES.keys
+        .find {|id| respond_to?("#{id}?", true) ? send("#{id}?") : id }
   end
 
   # Return major version.
@@ -136,17 +148,18 @@ class Browser
 
   # Return the full version.
   def full_version
-    if ie?
-      ie_full_version
-    else
-      _, *v = *ua.match(VERSIONS.fetch(id, VERSIONS[:default]))
-      v.compact.first || "0.0"
-    end
+    @full_version ||=
+      if ie?
+        ie_full_version
+      else
+        _, *v = *ua.match(VERSIONS.fetch(id, VERSIONS[:default]))
+        v.compact.first || "0.0"
+      end
   end
 
   # Return true if browser is modern (Webkit, Firefox 17+, IE9+, Opera 12+).
   def modern?
-    self.class.modern_rules.any? {|rule| rule === self }
+    self.class.modern_rules.any? { |rule| rule.call self }
   end
 
   # Detect if browser is WebKit-based.
@@ -171,21 +184,21 @@ class Browser
 
   # Detect if browser is Safari.
   def safari?
-    (ua =~ /Safari/ || safari_webapp_mode?) && ua !~ /Android|Chrome|CriOS|PhantomJS/
+    (in_ua?('Safari') || safari_webapp_mode?) && ua !~ /Android|Chrome|CriOS|PhantomJS/
   end
 
   def safari_webapp_mode?
-    (ipad? || iphone?) && ua =~ /AppleWebKit/
+    (ipad? || iphone?) && in_ua?('AppleWebKit')
   end
 
   # Detect if browser is Firefox.
   def firefox?
-    !!(ua =~ /Firefox/)
+    in_ua? 'Firefox'
   end
 
   # Detect if browser is Chrome.
   def chrome?
-    (in_ua?('Chrome'.freeze) || in_ua?('CriOS'.freeze)) && !opera? && !edge?
+    (in_ua?('Chrome') || in_ua?('CriOS')) && !opera? && !edge?
   end
 
   # Detect if browser is Opera.
@@ -195,12 +208,12 @@ class Browser
 
   # Detect if browser is Silk.
   def silk?
-    !!(ua =~ /Silk/)
+    in_ua? 'Silk'
   end
 
   # Detect if browser is Yandex.
   def yandex?
-    !!(ua =~ /YaBrowser/)
+    in_ua? 'YaBrowser'
   end
 
   def known?
@@ -209,10 +222,11 @@ class Browser
 
   # Return a meta info about this browser.
   def meta
-    Meta.constants.each_with_object(Set.new) do |meta_name, meta|
-      meta_class = Meta.const_get(meta_name)
-      meta.merge(meta_class.new(self).to_a)
-    end.to_a
+    @meta ||=
+      Meta.constants.each_with_object(Set.new) do |meta_name, meta|
+        meta_class = Meta.const_get(meta_name)
+        meta.merge(meta_class.new(self).to_a)
+      end.to_a
   end
 
   alias_method :to_a, :meta
