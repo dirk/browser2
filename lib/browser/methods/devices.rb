@@ -2,21 +2,21 @@ class Browser
   module Devices
     # Detect if browser is iPhone.
     def iphone?
-      !!(ua =~ /iPhone/)
+      in_ua? 'iPhone'
     end
 
     # Detect if browser is iPad.
     def ipad?
-      !!(ua =~ /iPad/)
+      in_ua? 'iPad'
     end
 
     # Detect if browser is iPod.
     def ipod?
-      !!(ua =~ /iPod/)
+      in_ua? 'Pod'
     end
 
     def surface?
-      windows_rt? && !!(ua =~ /Touch/)
+      windows_rt? && in_ua?('Touch')
     end
 
     # Detect if browser is tablet (currently iPad, Android, Surface or Playbook).
@@ -26,7 +26,7 @@ class Browser
 
     # Detect if browser is Kindle.
     def kindle?
-      !!(ua =~ /Kindle/ || silk?)
+      in_ua?('Kindle') || silk?
     end
 
     # Detect if browser if a Blackberry Playbook tablet

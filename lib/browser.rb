@@ -182,11 +182,11 @@ class Browser
 
   # Detect if browser is Safari.
   def safari?
-    (ua =~ /Safari/ || safari_webapp_mode?) && ua !~ /Android|Chrome|CriOS|PhantomJS/
+    (in_ua?('Safari') || safari_webapp_mode?) && ua !~ /Android|Chrome|CriOS|PhantomJS/
   end
 
   def safari_webapp_mode?
-    (ipad? || iphone?) && ua =~ /AppleWebKit/
+    (ipad? || iphone?) && in_ua?('AppleWebKit')
   end
 
   # Detect if browser is Firefox.
@@ -206,12 +206,12 @@ class Browser
 
   # Detect if browser is Silk.
   def silk?
-    !!(ua =~ /Silk/)
+    in_ua? 'Silk'
   end
 
   # Detect if browser is Yandex.
   def yandex?
-    !!(ua =~ /YaBrowser/)
+    in_ua? 'YaBrowser'
   end
 
   def known?
