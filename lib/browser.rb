@@ -1,6 +1,11 @@
+require "multi_json"
+require "pathname"
 require "set"
 require "yaml"
-require "pathname"
+
+require "browser/data/bots"
+require "browser/data/languages"
+require "browser/data/search_engines"
 
 require "browser/middleware"
 require "browser/middleware/context"

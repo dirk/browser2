@@ -30,6 +30,8 @@ Gem::Specification.new do |s|
     "\n"
   ].join("\n")
 
+  s.add_dependency 'multi_json', '~> 1.11'
+
   s.add_development_dependency "bundler", ">= 0"
   s.add_development_dependency "rake"
   s.add_development_dependency "rails"
