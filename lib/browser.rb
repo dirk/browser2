@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "multi_json"
 require "pathname"
 require "set"
@@ -157,7 +159,7 @@ class Browser
 
   # Return true if browser is modern (Webkit, Firefox 17+, IE9+, Opera 12+).
   def modern?
-    self.class.modern_rules.any? {|rule| rule === self }
+    self.class.modern_rules.any? { |rule| rule.call self }
   end
 
   # Detect if browser is WebKit-based.

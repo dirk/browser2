@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Browser
   module Bots
     BOTS           = Browser::Data::BOTS
@@ -16,7 +18,7 @@ class Browser
     end
 
     def bot_name
-      return 'Generic Bot'.freeze if bot_with_empty_ua?
+      return 'Generic Bot' if bot_with_empty_ua?
 
       pair = BOTS.find {|key, _| ua.include?(key) }
       return pair ? pair.first : nil
@@ -29,7 +31,7 @@ class Browser
     private
 
     def bot_with_empty_ua?
-      Browser::Bots.detect_empty_ua? && ua.strip == ''.freeze
+      Browser::Bots.detect_empty_ua? && ua.strip == ''
     end
   end
 end
