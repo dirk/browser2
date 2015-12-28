@@ -1,10 +1,8 @@
 # Browser
 
-[![Travis-CI](https://travis-ci.org/fnando/browser.png)](https://travis-ci.org/fnando/browser)
-[![CodeClimate](https://codeclimate.com/github/fnando/browser.png)](https://codeclimate.com/github/fnando/browser)
-[![Gem Version](https://badge.fury.io/rb/browser.svg)](http://badge.fury.io/rb/browser)
+[![Travis-CI](https://travis-ci.org/dirk/browser2.png)](https://travis-ci.org/dirk/browser2)
 
-Do some browser detection with Ruby. Includes ActionController integration.
+Performance-optimized fork of the [`browser`](https://github.com/fnando/browser) Ruby gem.
 
 ## Installation
 
@@ -15,10 +13,10 @@ gem install browser
 ## Usage
 
 ```ruby
-require "rubygems"
-require "browser"
+require 'rubygems'
+require 'browser2'
 
-browser = Browser.new(:ua => "some string", :accept_language => "en-us")
+browser = Browser.new ua: 'some string', accept_language: 'en-us'
 browser.name            # readable browser name
 browser.version         # major version number
 browser.full_version
@@ -56,7 +54,11 @@ browser.meta            # an array with several attributes
 browser.to_s            # the meta info joined by space
 ```
 
-See the [tests](https://github.com/fnando/browser/blob/master/test/browser_test.rb) and [implementation](https://github.com/fnando/browser/blob/master/lib/browser.rb) for more examples.
+See the [tests](https://github.com/dirk/browser2/blob/master/test/browser_test.rb) and [implementation](https://github.com/dirk/browser2/blob/master/lib/browser.rb) for more examples.
+
+### Integrations
+
+Browser comes out-of-the-box with helpers for use in Ruby on Rails applications and Rack servers. See [`doc/rails_and_rack.md`](doc/rails_and_rack.md) for more details.
 
 ### What defines a modern browser?
 
@@ -75,22 +77,6 @@ You can define your own rules. A rule must be a proc/lambda or any object that i
 # Only Chrome Canary is considered modern.
 Browser.modern_rules.clear
 Browser.modern_rules << -> b { b.chrome? && b.version.to_i >= 37 }
-```
-
-### Rails integration
-
-Just add it to the Gemfile.
-
-```ruby
-gem "browser"
-```
-
-This adds a helper method called `browser`, that inspects your current user agent.
-
-```erb
-<% if browser.ie?(6) %>
-  <p class="disclaimer">You're running an older IE version. Please update it!</p>
-<% end %>
 ```
 
 ### Internet Explorer
@@ -123,74 +109,17 @@ This behavior changed in `v1.0.0`; previously there wasn't a way of getting the 
 
 ### Bots
 
-Browser used to detect empty user agents as bots, but this behaviour has changed. If you want to bring this detection back, you can activate it through the following call:
+Browser used to detect empty user agents as bots, but this behavior has changed. If you want to bring this detection back, you can activate it through the following call:
 
 ```ruby
 Browser::Bots.detect_empty_ua!
 ```
 
-### Middleware
+## Authors
 
-You can use the `Browser::Middleware` to redirect user agents.
-
-```ruby
-use Browser::Middleware do
-  redirect_to "/upgrade" unless browser.modern?
-end
-```
-
-If you're using Rails, you can use the route helper methods. Just add something like the following to a initializer file (`config/initializers/browser.rb`).
-
-```ruby
-Rails.configuration.middleware.use Browser::Middleware do
-  redirect_to upgrade_path unless browser.modern?
-end
-```
-
-Notice that you can have multiple conditionals.
-
-```ruby
-Rails.configuration.middleware.use Browser::Middleware do
-  next if browser.search_engine?
-  redirect_to upgrade_path(browser: "oldie") if browser.ie? && !browser.modern?
-  redirect_to upgrade_path(browser: "oldfx") if browser.firefox? && !browser.modern?
-end
-```
-
-If you need acccess to the `Rack::Request` object (e.g. to exclude a path), you can do so with `request`.
-```ruby
-Rails.configuration.middleware.use Browser::Middleware do
-  redirect_to upgrade_path unless browser.modern? || request.env['PATH_INFO'] == '/exclude_me'
-end
-```
-
-## Maintainer
-
-* Nando Vieira - http://nandovieira.com.br
-
-## Contributors
-
-* https://github.com/fnando/browser/contributors
+* [Dirk Gadsden](https://dirk.to) (`browser2` maintainer)
+* [Nando Vieira](http://nandovieira.com.br) (original author of `browser`)
 
 ## License
 
-(The MIT License)
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Licensed under the MIT license. See [LICENSE](LICENSE) for details.
