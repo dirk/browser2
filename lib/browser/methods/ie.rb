@@ -94,7 +94,7 @@ class Browser
     private
 
     def msie?
-      !!(ua =~ /MSIE/ && ua !~ /Opera/)
+      in_ua?('MSIE') && !in_ua?('Opera')
     end
 
     def modern_ie?

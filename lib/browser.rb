@@ -130,11 +130,24 @@ class Browser
     NAMES[id]
   end
 
+  # Convert NAMES into a hash mapping a name symbol to a block that calls the
+  # tester method (eg. `#firefox?`)
+  NAMES_TESTERS =
+    NAMES
+      .map do |(key, _)|
+        tester = "#{key}?"
+
+        [ key, ->(browser) { browser.send(tester) } ]
+      end
+      .to_h
+      .tap do |testers|
+        # Other comes last and always returns `true`
+        testers[:other] = ->(_browser) { true }
+      end
+
   # Get the browser identifier.
   def id
-    @id ||=
-      NAMES.keys
-        .find {|id| respond_to?("#{id}?", true) ? send("#{id}?") : id }
+    @id ||= (pair = NAMES_TESTERS.find {|(_, tester)| tester.call self }) ? pair.first : nil
   end
 
   # Return major version.
@@ -142,7 +155,7 @@ class Browser
     if ie?
       ie_version
     else
-      full_version.to_s.split(".").first
+      full_version.to_s.split(".", 2).first
     end
   end
 
