@@ -5,7 +5,6 @@ rvm:
   - 'ruby-2.3.0'
   - '2.2'
   - '2.1'
-  - '2.0'
 gemfile:
   - Gemfile
   - gemfiles/rails3.gemfile
