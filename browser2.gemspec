@@ -39,4 +39,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "minitest"
   s.add_development_dependency "minitest-utils"
   s.add_development_dependency "pry-meta"
+  s.add_development_dependency "ruby-prof"
 end

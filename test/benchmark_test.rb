@@ -1,6 +1,8 @@
 require 'test_helper'
 
 require 'benchmark'
+require 'ruby-prof'
+
 require 'minitest/benchmark'
 
 class BenchmarkTest < Minitest::Benchmark
@@ -53,17 +55,29 @@ class BenchmarkTest < Minitest::Benchmark
 
     WARMUP.times &block
 
-    time = Benchmark.realtime do
-      ITERATIONS.times &block
-    end
-
+    time    = benchmark_time &block
     objects = benchmark_memory &block
 
     print "#{name}\t%10.5f seconds\t%d objects\n" % [time, objects]
   end
 
+  def bench_browser_performance ua, &block
+    result = RubyProf.profile do
+      10_000.times &block
+    end
+
+    printer = RubyProf::FlatPrinter.new(result)
+    printer.print(STDOUT)
+  end
+
   def validation_noop
     proc { }
+  end
+
+  def benchmark_time &block
+    Benchmark.realtime do
+      ITERATIONS.times &block
+    end
   end
 
   def benchmark_memory &block
